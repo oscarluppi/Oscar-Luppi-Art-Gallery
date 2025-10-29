@@ -1,92 +1,75 @@
 <?php
 function getPageDetails($path) {
-    $page = null;
-    $tit = null;
-    $nav = null;
+    $segments = explode('/', trim($path, '/'));
+    $first = $segments[0] ?? '';
+    $second = $segments[1] ?? '';
 
-    // Divide l'URL in segmenti
-    $segments = explode('/', $path);
+    // Percorsi e titoli di default
+    $defaultNav = "src/nav/default.php";
+    $emptyNav   = "src/nav/empty.php";
+    $staffNav   = "src/nav/staff.php";
 
-    // Controlla il primo segmento per determinare la pagina
-    $firstSegment = isset($segments[1]) ? $segments[1] : '';
+    switch ($first) {
 
-    // Gestisci le pagine in base al primo segmento
-    switch ($firstSegment) {
         case 'categorie':
-            switch ($segments[2]) {
-                case 'all':
-                    $page = "src/categorie/cat0.php";
-					$nav = "src/nav/default.php";
-                    $tit = "All categories";
-                    break;
-                case '06-09':
-                    $page = "src/categorie/cat1.php";
-					$nav = "src/nav/default.php";
-                    $tit = "Anni 2002-2009";
-                    break;
-                case '10-19':
-                    $page = "src/categorie/cat2.php";
-					$nav = "src/nav/default.php";
-                    $tit = "Anni 2010-2019";
-                    break;
-                case '20-25':
-                    $page = "src/categorie/cat3.php";
-					$nav = "src/nav/default.php";
-                    $tit = "Anni 2020-2025";
-                    break;
-                    
+            $categorieMap = [
+                'all'   => ['src/pagine/categoria.php', "All categories"],
+                '06-09' => ['src/pagine/categoria.php', "Anni 2002-2009"],
+                '10-19' => ['src/pagine/categoria.php', "Anni 2010-2019"],
+                '20-25' => ['src/pagine/categoria.php', "Anni 2020-2025"],
+            ];
+            if (isset($categorieMap[$second])) {
+                [$page, $tit] = $categorieMap[$second];
+                return ["page" => $page, "tit" => $tit, "nav" => $defaultNav];
             }
-            
+            break;
+
         case 'staff':
-            switch ($segments[2]) {
-                case 'nuovo':
-                    $page = "src/add/insert.php";
-					$nav = "src/nav/staff.php";
-					$tit = "Nuovo quadro";
-                    break;
-                case 'salva':
-                    $page = "src/add/save.php";
-					$nav = "src/nav/empty.php";
-                    $tit = "Quadro salvato";
-                    break;
-				case 'list':
-					$page = "src/add/lista.php";
-					$nav = "src/nav/staff.php";
-					$tit = "Lista quadri";
-					break;
-                    
+            $staffMap = [
+                'nuovo' => ['src/add/insert.php', "Nuovo quadro", $staffNav],
+                'salva' => ['src/add/save.php', "Quadro salvato", $emptyNav],
+                'list'  => ['src/add/lista.php', "Lista quadri", $staffNav],
+            ];
+            if (isset($staffMap[$second])) {
+                [$page, $tit, $nav] = $staffMap[$second];
+                return ["page" => $page, "tit" => $tit, "nav" => $nav];
             }
-
-        case 'altro':
-            // Aggiungi qui la logica per altre pagine, se necessario
             break;
 
-        case "":
-            $page = "src/pagine/home.php";
-			$nav = "src/nav/default.php";
-            $tit = "Oscar Luppi Art Gallery";
-            break;
+        case '':
+            return [
+                "page" => "src/pagine/home.php",
+                "tit"  => "Oscar Luppi Art Gallery",
+                "nav"  => $defaultNav
+            ];
 
-        case "page":
-            $page = "src/pagine/page.php";
-			$nav = "src/nav/default.php";
-            $tit = "Pagina del quadro";
-            break;
+        case 'page':
+            return [
+                "page" => "src/pagine/page.php",
+                "tit"  => "Pagina del quadro",
+                "nav"  => $defaultNav
+            ];
 
-        case "link":
-            $page = "src/pagine/contatti.php";
-			$nav = "src/nav/default.php";
-            $tit = "Social Links";
-            break;
+        case 'link':
+            return [
+                "page" => "src/pagine/contatti.php",
+                "tit"  => "Social Links",
+                "nav"  => $defaultNav
+            ];
 
         default:
-            // Se il primo segmento non corrisponde a nessuna pagina, mostra errore 404
-            $page = "404.php";
-			$nav = "src/nav/empty.php";
-            $tit = "error 404";
-            break;
+            return [
+                "page" => "src/pagine/404.php",
+                "tit"  => "Errore 404 - Pagina non trovata",
+                "nav"  => $emptyNav
+            ];
     }
 
-    return array("page" => $page, "tit" => $tit, "nav" => $nav);
+    // Se nessun caso corrisponde
+    return [
+        "page" => "404.php",
+        "tit"  => "Errore 404 - Pagina non trovata",
+        "nav"  => $emptyNav
+    ];
 }
 ?>
