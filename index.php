@@ -24,7 +24,7 @@ $nav  = file_exists($nav)  ? $nav  : "src/nav/empty.php";
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Benvenuto nel mio sito web! Scopri tutti i quadri di Oscar Luppi.">
 	<title><?= $tit ?></title>
-	<link rel="icon" href="/public/painting.png">
+	<link rel="icon" href="/public/3d-painting.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 	<style>
